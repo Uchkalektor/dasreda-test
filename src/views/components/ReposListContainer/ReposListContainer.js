@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { compose } from '../../../core/utils';
+import config from '../../../config';
 import { withApiService } from '../../../core/hocs';
 import { fetchReposRequest, fetchReposSuccess, fetchReposFailure } from '../../../core/actions';
 import Container from '../Container';
@@ -13,7 +14,8 @@ import ReposPagination from '../ReposPagination';
 
 const ReposListContainer = (props) => {
   const { pageNumber = '1' } = props.match.params;
-  const [error, setError] = useState();
+  const [, setError] = useState();
+  const [maxPage, setMaxPage] = useState(1);
   //props
   const { isLoading, repos, searchField, licenseFilter } = props;
   //dispatchers
@@ -26,6 +28,11 @@ const ReposListContainer = (props) => {
     apiService
       .getReposList(pageNumber, searchField, licenseFilter)
       .then((res) => {
+        if (res.total_count < config.maxSearchResults) {
+          setMaxPage(Math.ceil(res.total_count / config.itemsPerPage));
+        } else {
+          setMaxPage(Math.ceil(config.maxSearchResults / config.itemsPerPage));
+        }
         fetchReposSuccess(res.items);
       })
       .catch((e) => {
@@ -40,17 +47,17 @@ const ReposListContainer = (props) => {
     return <Redirect to="/" />;
   }
 
-  return isLoading ? (
+  return (
     <Container>
       <ReposFilters />
-      <Loader />
-      <ReposPagination page={parseInt(pageNumber)} />
-    </Container>
-  ) : (
-    <Container>
-      <ReposFilters />
-      <ReposList repos={repos} />
-      <ReposPagination page={parseInt(pageNumber)} />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <React.Fragment>
+          <ReposList repos={repos} />
+          <ReposPagination page={parseInt(pageNumber)} maxPage={maxPage} />
+        </React.Fragment>
+      )}
     </Container>
   );
 };

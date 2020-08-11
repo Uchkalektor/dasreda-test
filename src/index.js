@@ -12,13 +12,13 @@ import ErrorBoundary from './views/components/ErrorBoundary';
 
 ReactDOM.render(
   <Provider store={store}>
-    <ErrorBoundary>
-      <Router>
+    <Router>
+      <ErrorBoundary>
         <ApiServiceProvider value={ApiService}>
           <App />
         </ApiServiceProvider>
-      </Router>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </Router>
   </Provider>,
   document.getElementById('root'),
 );

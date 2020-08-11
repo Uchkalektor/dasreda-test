@@ -1,37 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 import Container from '../Container';
-
-const ErrorIndicatorContainer = styled.div`
-  width: 100%;
-  text-align: center;
-
-  .title {
-    color: red;
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-
-  .message {
-    margin-top: 12px;
-  }
-
-  .go-back {
-    font-weight: bold;
-    transition: all 0.2s ease-in-out;
-    cursor: pointer;
-    margin-top: 12px;
-
-    &:hover {
-      color: blue;
-    }
-  }
-`;
+import ErrorIndicatorContainer from './ErrorIndicator.styled';
 
 const ErrorIndicator = (props) => {
-  const { errorMessage, resetErrorIndicator } = props;
+  const { errorMessage } = props;
+
+  const history = useHistory();
+
+  const resetErrorIndicator = () => {
+    history.goBack();
+  };
 
   return (
     <Container>
@@ -48,7 +28,6 @@ const ErrorIndicator = (props) => {
 
 ErrorIndicator.propTypes = {
   errorMessage: PropTypes.string.isRequired,
-  resetErrorIndicator: PropTypes.func.isRequired,
 };
 
 export default ErrorIndicator;

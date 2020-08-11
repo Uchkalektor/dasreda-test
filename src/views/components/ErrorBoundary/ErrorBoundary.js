@@ -11,18 +11,9 @@ class ErrorBoundary extends Component {
     this.setState({ hasError: true, errorMessage: error });
   }
 
-  resetErrorIndicator = () => {
-    this.setState({ hasError: false });
-  };
-
   render() {
     if (this.state.hasError) {
-      return (
-        <ErrorIndicator
-          resetErrorIndicator={this.resetErrorIndicator}
-          errorMessage={this.state.errorMessage}
-        />
-      );
+      return <ErrorIndicator errorMessage={this.state.errorMessage} />;
     }
 
     return this.props.children;

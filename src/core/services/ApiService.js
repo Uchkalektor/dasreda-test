@@ -12,15 +12,24 @@ class ApiService {
   };
 
   _createQuery = (page, name, license) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - 1);
+
     return `?q=${name ? `${name}+in:name+` : ''}${
       license ? `+license:${license}+` : ''
-    }language:javascript&sort=stars&order=desc&per_page=10&page=${page}`;
+    }language:javascript+created:>${date
+      .toISOString()
+      .substr(0, 10)}&sort=stars&order=desc&per_page=10&page=${page}`;
   };
 
   getReposList = async (page, name, license) => {
     const query = this._createQuery(page, name, license);
 
     return await this.getData(`/search/repositories${query}`);
+  };
+
+  getLicensesList = async () => {
+    return await this.getData('/licenses');
   };
 }
 
